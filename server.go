@@ -145,10 +145,10 @@ func (s *MServer) MeasureWebsite(req MWebsiteReq, res *MRes) error {
 	Response.Diff = Diff
 	var Stats = make(map[string]LatencyStats)
 	statc, errc := make(chan LatencyStats), make(chan error)
-	logger.Printf("Currently there are %v workers", len(workerIPs))
+	logger.Printf("Currently there are %v workers\n", len(workerIPs))
 	for _, ip := range workerIPs {
 		go func(ip string) {
-			logger.Printf("about to delegate to worker %v", ip)
+			logger.Printf("about to delegate to worker %v\n", ip)
 			worker_stats, err := delegateToWorker(ip, req)
 			if err != nil {
 				errc <- err
@@ -311,6 +311,8 @@ func (s *MServer) JoinWorker(ip string, reply *bool) error {
 
 func delegateToWorker(workerIP string, req MWebsiteReq) (LatencyStats, error) {
 	var LS LatencyStats
+	logger.Printf("There are %v worker rpc clients", len(workerRPCClients))
+	logger.Printf("Calling worker.FetchTest on ip: %v", workerIP)
 	client := workerRPCClients[workerIP]
 	logger.Println("About to call Worker.FetchTest")
 	client.Call("Worker.FetchTest", req, &LS)
