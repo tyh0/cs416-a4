@@ -280,6 +280,9 @@ func ListenForPong(conn *net.UDPConn, c chan bool) {
 	logger.Print("About to start reading from UDP in ListenForPong")
 	for {
 		logger.Printf("Listening on UDPConn %v", conn)
+		if err != nil {
+			logger.Printf("Error Listening for Pong on UDP Connection: ", err)
+		}
 		n, _, err := conn.ReadFromUDP(buf)
 		checkError("ListenForPong", err, false)
 		logger.Printf("Read value from pong: %v", buf[0:n])
