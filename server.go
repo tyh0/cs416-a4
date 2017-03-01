@@ -196,7 +196,7 @@ func (s *MServer) GetWorkers(req MWorkersReq, reply *MRes) error {
 				return
 			}
 			latc <- LS
-		}(ip)
+		}(ip, req, i)
 	}
 
 	for i := 0; i < len(workerIPs); i++ {
