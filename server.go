@@ -230,6 +230,9 @@ func SendPingPong(ip string, req MWorkersReq, index int) (LatencyStats, error) {
 	ServerSendPortAddr, err := net.ResolveUDPAddr("udp", udpSendIPPort)
 	checkError("Creating SendPingPong udp addrs", err, false)
 	ListenConn, err := net.ListenUDP("udp", ServerListenPortAddr)
+	if err != nil {
+		logger.Printf("error setting up ListenConn: %v", err)
+	}
 	checkError("Creating Server Listen UDP Conn", err, false)
 	logger.Printf("About to call ListenForPong")
 	go ListenForPong(ListenConn, PongChan)
@@ -239,13 +242,13 @@ func SendPingPong(ip string, req MWorkersReq, index int) (LatencyStats, error) {
 	logger.Printf("Ping msg in buffer form: %v", buf)
 	logger.Print("Dialing Worker via UDP")
 	SendConn, err := net.DialUDP("udp", ServerSendPortAddr, ClientAddr)
+	if err != nil {
+		logger.Printf("error making UDP SendConn: %v", err)
+	}
 	// defer ListenConn.Close()
 	// defer SendConn.Close()
 	for i := 0; i < numSamples; i++ {
 		now := time.Now()
-		if err != nil {
-			logger.Printf("error making UDP connection: ", err)
-		}
 		logger.Printf("Sending ping %v to Worker @: %v", strconv.Itoa(i), SendConn)
 		_, err = SendConn.Write(buf)
 		checkError("Sending PING", err, false)
