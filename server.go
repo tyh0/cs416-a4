@@ -145,8 +145,10 @@ func (s *MServer) MeasureWebsite(req MWebsiteReq, res *MRes) error {
 	Response.Diff = Diff
 	var Stats = make(map[string]LatencyStats)
 	statc, errc := make(chan LatencyStats), make(chan error)
+	logger.Printf("Currently there are %v workers", len(workerIPs))
 	for _, ip := range workerIPs {
 		go func(ip string) {
+			logger.Printf("about to delegate to worker %v", ip)
 			worker_stats, err := delegateToWorker(ip, req)
 			if err != nil {
 				errc <- err
