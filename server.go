@@ -188,9 +188,9 @@ func (s *MServer) GetWorkers(req MWorkersReq, reply *MRes) error {
 	latc, errc := make(chan LatencyStats), make(chan error)
 	logger.Print("About to call SendPingPong on all workers")
 	for i, ip := range workerIPs {
-		go func(ip string) {
+		go func(ip string, r MWorkersReq, index int) {
 			logger.Printf("Calling SendPingPong on worker: %v", ip)
-			LS, err := SendPingPong(ip, req, i)
+			LS, err := SendPingPong(ip, r, index)
 			if err != nil {
 				errc <- err
 				return
