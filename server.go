@@ -239,8 +239,8 @@ func SendPingPong(ip string, req MWorkersReq, index int) (LatencyStats, error) {
 	logger.Printf("Ping msg in buffer form: %v", buf)
 	logger.Print("Dialing Worker via UDP")
 	SendConn, err := net.DialUDP("udp", ServerSendPortAddr, ClientAddr)
-	defer ListenConn.Close()
-	defer SendConn.Close()
+	// defer ListenConn.Close()
+	// defer SendConn.Close()
 	for i := 0; i < numSamples; i++ {
 		now := time.Now()
 		if err != nil {
